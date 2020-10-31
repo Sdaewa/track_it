@@ -23,8 +23,31 @@ h1 {
   background: rgba(0, 0, 0, 0.8);
   border-radius: var(--border-radius);
   cursor: pointer;
+  text-align: center;
   text-transform: uppercase;
   width: 275px;
   margin: 20px auto 10px;
   user-select: none;
+}
+
+h1:hover {
+  background: rgba(0, 0, 0, 1)
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.item {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin: 10px;
+}
+
+.item:hover {
+  background: rgba(0, 0, 0, 0.6);
 }

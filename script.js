@@ -6,6 +6,7 @@ const websiteNameEl = document.getElementById('website-name');
 const websiteUrlEl = document.getElementById('website-url');
 const bookmarksContainer = document.getElementById('bookmarks-contaienr');
 
+let bookmarks = [];
 
 function showModal() {
     modal.classList.add('show-modal');
@@ -29,6 +30,18 @@ function validateForm(nameValue, urlValue) {
     return true;
 }
 
+function fetchBookmarks() {
+    if (localStorage.getItem('bookmarks')) {
+        bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    } else {
+        bookmarks = [{
+            name: 'Something',
+            url: 'https://github.com'
+        }];
+    };
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+}
+
 function storeBookmark(e) {
     e.preventDefault();
     const nameValue = websiteNameEl.value;
@@ -39,6 +52,15 @@ function storeBookmark(e) {
     if (!validateForm(nameValue, urlValue)) {
         return false;
     }
+    const bookmark = {
+        name: nameValue,
+        url: urlValue
+    };
+    bookmarks.push(bookmark);
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    fetchBookmarks();
+    bookmarkForm.reset();
+    websiteNameEl.focus();
 }
 
 
@@ -50,3 +72,6 @@ window.addEventListener('click', (e) => {
     (e.target === modal) ? modal.classList.remove('show-modal'): false;
 });
 bookmarkForm.addEventListener('submit', storeBookmark);
+
+
+fetchBookmarks();

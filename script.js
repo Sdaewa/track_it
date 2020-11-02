@@ -1,12 +1,12 @@
 const modal = document.getElementById('modal');
 const modalShow = document.getElementById('show-modal');
 const modalClose = document.getElementById('close-modal');
-const bookmarkForm = document.getElementById('bookmark-form');
+const applicationForm = document.getElementById('bookmark-form');
 const websiteNameEl = document.getElementById('website-name');
 const websiteUrlEl = document.getElementById('website-url');
-const bookmarksContainer = document.getElementById('bookmarks-container');
+const applicationsContainer = document.getElementById('applications-container');
 
-let bookmarks = [];
+let applications = [];
 
 function showModal() {
     modal.classList.add('show-modal');
@@ -17,59 +17,77 @@ function validateForm(nameValue, urlValue) {
     const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
     const regex = new RegExp(expression);
     if (!nameValue || !urlValue) {
-        alert('one or both inputs are empty');
+        alert('Something is missing');
         return false;
     }
     if (urlValue.match(regex)) {
 
     };
     if (!urlValue.match(regex)) {
-        alert('Enter Valid address');
+        alert('Enter Valid URL please');
         return false;
     };
     return true;
 }
 
-function buildBookmarks() {
-    bookmarks.forEach((bookmark) => {
+function buildApplications() {
+    applicationsContainer.textContent = '';
+    applications.forEach((Application) => {
         const {
             name,
             url
-        } = bookmark;
+        } = Application;
         const item = document.createElement('div');
         item.classList.add('item');
+
         const closeIcon = document.createElement('i');
-        closeIcon.setAttribute('title', 'delete bookmark');
-        closeIcon.setAttribute('onclick', `deleteBookmark('${url}')`);
+        closeIcon.classList.add('fas', 'fa-times');
+        closeIcon.setAttribute('title', 'deleteApplication');
+        closeIcon.setAttribute('onclick', `deleteApplication('${url}')`);
+
         const linkInfo = document.createElement('div');
         linkInfo.classList.add('name');
+
         const favicon = document.createElement('img');
         favicon.setAttribute('src', `https://s2.googleusercontent.com/s2/favicons?domain=${url}`);
         favicon.setAttribute('alt', 'Favicon');
+
         const link = document.createElement('a');
         link.setAttribute('href', `${url}`);
         link.setAttribute('target', '_blank');
         link.textContent = name;
         linkInfo.append(favicon, link);
         item.append(closeIcon, linkInfo);
-        bookmarksContainer.appendChild(item);
+        applicationsContainer.appendChild(item);
     });
 }
 
-function fetchBookmarks() {
-    if (localStorage.getItem('bookmarks')) {
-        bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-    } else {
-        bookmarks = [{
-            name: 'Something',
-            url: 'https://github.com'
-        }];
+function fetchApplications() {
+    if (localStorage.getItem('applications')) {
+        applications = JSON.parse(localStorage.getItem('applications'));
+
+        // else {
+        //     applications = [{
+        //         name: 'Github',
+        //         url: 'https://github.com'
+        //     }];
     };
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-    buildBookmarks();
+    localStorage.setItem('applications', JSON.stringify(applications));
+    buildApplications();
 }
 
-function storeBookmark(e) {
+function deleteApplication(url) {
+    applications.forEach((Application, i) => {
+        if (Application.url === url) {
+            applications.splice(i, 1);
+        }
+    });
+
+    localStorage.setItem('applications', JSON.stringify(applications));
+    fetchApplications();
+}
+
+function storeApplication(e) {
     e.preventDefault();
     const nameValue = websiteNameEl.value;
     let urlValue = websiteUrlEl.value;
@@ -79,14 +97,14 @@ function storeBookmark(e) {
     if (!validateForm(nameValue, urlValue)) {
         return false;
     }
-    const bookmark = {
+    const Application = {
         name: nameValue,
         url: urlValue
     };
-    bookmarks.push(bookmark);
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-    fetchBookmarks();
-    bookmarkForm.reset();
+    applications.push(Application);
+    localStorage.setItem('applications', JSON.stringify(applications));
+    fetchApplications();
+    applicationForm.reset();
     websiteNameEl.focus();
 }
 
@@ -98,7 +116,7 @@ modalClose.addEventListener('click', () => {
 window.addEventListener('click', (e) => {
     (e.target === modal) ? modal.classList.remove('show-modal'): false;
 });
-bookmarkForm.addEventListener('submit', storeBookmark);
+applicationForm.addEventListener('submit', storeApplication);
 
 
-fetchBookmarks();
+fetchApplications();

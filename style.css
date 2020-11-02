@@ -169,7 +169,17 @@ button {
   color: white;
   background: var(--primary-color);
   height: 30px;
-  width: 30px;
+  width: 100px;
+  border-radius: var(--border-radius);
+  margin-top: 10px;
+}
+
+button:hover {
+  filter: brightness(110);
+}
+
+button:focus {
+  outline: none;
 }
 
 @media screen and (max-width: 600px) {

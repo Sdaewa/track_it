@@ -6,6 +6,7 @@ const websiteNameEl = document.getElementById('website-name');
 const websiteUrlEl = document.getElementById('website-url');
 const date = document.getElementById('date-picker');
 const applicationsContainer = document.getElementById('applications-container');
+const jobTitle = document.getElementById('job-title');
 
 let applications = [];
 
@@ -37,6 +38,7 @@ function buildApplications() {
     applications.forEach((application) => {
         const {
             name,
+            job,
             url,
             date
         } = application;
@@ -50,19 +52,20 @@ function buildApplications() {
 
         const linkInfo = document.createElement('div');
         linkInfo.classList.add('name');
-        // linkInfo.classList.add('date');
 
         const favicon = document.createElement('img');
         favicon.setAttribute('src', `https://s2.googleusercontent.com/s2/favicons?domain=${url}`);
         favicon.setAttribute('alt', 'Favicon');
 
         const link = document.createElement('a');
+        const position = document.createElement('h2');
         const linkDate = document.createElement('p');
         link.setAttribute('href', `${url}`);
         link.setAttribute('target', '_blank');
         link.textContent = name;
+        position.textContent = job;
         linkDate.textContent = date;
-        linkInfo.append(favicon, link, linkDate);
+        linkInfo.append(favicon, link, position, linkDate);
         item.append(closeIcon, linkInfo);
         applicationsContainer.appendChild(item);
     });
@@ -71,12 +74,6 @@ function buildApplications() {
 function fetchApplications() {
     if (localStorage.getItem('applications')) {
         applications = JSON.parse(localStorage.getItem('applications'));
-
-        // else {
-        //     applications = [{
-        //         name: 'Github',
-        //         url: 'https://github.com'
-        //     }];
     };
     localStorage.setItem('applications', JSON.stringify(applications));
     buildApplications();
@@ -97,6 +94,7 @@ function storeApplication(e) {
     e.preventDefault();
     const nameValue = websiteNameEl.value;
     const dateValue = date.value;
+    const jobValue = jobTitle.value;
     let urlValue = websiteUrlEl.value;
     if (!urlValue.includes('http://', 'https://')) {
         urlValue = `https://${urlValue}`;
@@ -106,6 +104,7 @@ function storeApplication(e) {
     }
     const application = {
         name: nameValue,
+        job: jobValue,
         url: urlValue,
         date: dateValue
     };
